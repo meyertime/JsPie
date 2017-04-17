@@ -160,6 +160,7 @@ namespace JsPie { namespace Scripting { namespace V8 {
 		if (!value.IsEmpty())
 		{
 			info.GetReturnValue().Set(value);
+			return;
 		}
 		
 		auto pIsolate = info.GetIsolate();
