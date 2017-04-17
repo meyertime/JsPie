@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E10DD29E-CE54-47C0-9D64-902844183A96}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>JsPie.Plugins</RootNamespace>
+    <AssemblyName>JsPie.Plugins</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Keyboard\KeyboardApi.cs" />
+    <Compile Include="Keyboard\KeyboardControl.cs" />
+    <Compile Include="Keyboard\KeyboardControlInfo.cs" />
+    <Compile Include="Keyboard\KeyboardHook.cs" />
+    <Compile Include="Keyboard\KeyboardHookEvent.cs" />
+    <Compile Include="Keyboard\KeyboardPlugin.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Ps3\Ps3ControlSet.cs" />
+    <Compile Include="Ps3\Ps3DigitalButtonControl.cs" />
+    <Compile Include="Ps3\Ps3AnalogButtonControl.cs" />
+    <Compile Include="Ps3\Ps3AnalogControl.cs" />
+    <Compile Include="Ps3\Ps3ControlInfo.cs" />
+    <Compile Include="Ps3\Ps3Api.cs" />
+    <Compile Include="Ps3\Ps3Control.cs" />
+    <Compile Include="Ps3\Ps3DPadControl.cs" />
+    <Compile Include="Ps3\Ps3InputData.cs" />
+    <Compile Include="Ps3\Ps3Plugin.cs" />
+    <Compile Include="Ps3\Ps3PsButtonControl.cs" />
+    <Compile Include="Ps3\Ps3UsbDeviceEnumerator.cs" />
+    <Compile Include="Ps3\Ps3UsbDeviceInfo.cs" />
+    <Compile Include="Ps3\Ps3UsbDeviceInterface.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JsPie.Core\JsPie.Core.csproj">
+      <Project>{fbaa8045-f4e7-49cb-bd05-589d5e894745}</Project>
+      <Name>JsPie.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,6 @@
+/src/**/bin
+/src/**/obj
+/src/ipch
+/src/JsPie.sdf
+/src/JsPie.VC.opendb
+.vs
