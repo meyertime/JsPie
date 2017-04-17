@@ -1,20 +1,24 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using static JsPie.Plugins.Keyboard.KeyboardApi;
 
 namespace JsPie.Plugins.Keyboard
 {
     public class KeyboardHook : IDisposable
     {
         private readonly IntPtr _hHook;
+        private readonly LowLevelKeyboardProc _lowLevelKeyboardProc;
 
         public KeyboardHook()
         {
-            _hHook = KeyboardApi.SetWindowsHookEx(KeyboardApi.WH_KEYBOARD_LL, LowLevelKeyboardProc, IntPtr.Zero, 0);
+            _lowLevelKeyboardProc = LowLevelKeyboardProc;
+
+            _hHook = SetWindowsHookEx(WH_KEYBOARD_LL, _lowLevelKeyboardProc, IntPtr.Zero, 0);
         }
 
         public void Dispose()
         {
-            KeyboardApi.UnhookWindowsHookEx(_hHook);
+            UnhookWindowsHookEx(_hHook);
         }
 
         public event KeyboardHookEventHandler KeyboardHookEvent;
@@ -25,19 +29,19 @@ namespace JsPie.Plugins.Keyboard
             {
                 switch ((int)wParam)
                 {
-                    case KeyboardApi.WM_KEYDOWN:
-                    case KeyboardApi.WM_SYSKEYDOWN:
+                    case WM_KEYDOWN:
+                    case WM_SYSKEYDOWN:
                         RaiseEvent(Marshal.ReadInt32(lParam), true);
                         break;
 
-                    case KeyboardApi.WM_KEYUP:
-                    case KeyboardApi.WM_SYSKEYUP:
+                    case WM_KEYUP:
+                    case WM_SYSKEYUP:
                         RaiseEvent(Marshal.ReadInt32(lParam), false);
                         break;
                 }
             }
 
-            return KeyboardApi.CallNextHookEx(_hHook, nCode, wParam, lParam);
+            return CallNextHookEx(_hHook, nCode, wParam, lParam);
         }
 
         private void RaiseEvent(int keyCode, bool value)
