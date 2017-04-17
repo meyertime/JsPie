@@ -70,7 +70,7 @@ namespace JsPie { namespace Scripting { namespace V8 {
 
 		auto source = (System::String^)nullptr; // TODO: Get source / stack trace			
 
-		oEnvironment->Console->Write(gcnew ScriptObservation((ScriptSeverity)severity, message, source, nullptr));
+		ScriptConsoleExtensions::Write(oEnvironment->Console, (ScriptSeverity)severity, source, message);
 	}
 
 } } }

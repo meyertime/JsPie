@@ -81,7 +81,7 @@ namespace JsPie { namespace Scripting { namespace V8 {
 		auto e = input->ControlEvent;
 		if (e != nullptr)
 		{
-			_oEnvironment->Console->Write(gcnew ScriptObservation(ScriptSeverity::Trace, "Input event: " + e->ControlId->ToString() + " = " + e->Value, nullptr, nullptr));
+			ScriptConsoleExtensions::TraceFormat(_oEnvironment->Console, "Input event: {0} = {1}", e->ControlId, e->Value);
 			_oEnvironment->ControlState->ApplyInputEvent(e);
 		}
 
@@ -90,12 +90,12 @@ namespace JsPie { namespace Scripting { namespace V8 {
 		{
 			for each (auto ev in es)
 			{
-				_oEnvironment->Console->Write(gcnew ScriptObservation(ScriptSeverity::Trace, "Input event: " + ev->ControlId->ToString() + " = " + ev->Value, nullptr, nullptr));
+				ScriptConsoleExtensions::TraceFormat(_oEnvironment->Console, "Input event: {0} = {1}", ev->ControlId, ev->Value);
 				_oEnvironment->ControlState->ApplyInputEvent(ev);
 			}
 		}
 
-		_oEnvironment->Console->Write(gcnew ScriptObservation(ScriptSeverity::Trace, "Running script.", nullptr, nullptr));
+		ScriptConsoleExtensions::Trace(_oEnvironment->Console, "Running script.");
 
 		v8::Isolate::Scope isolate_scope(_pIsolate);
 		v8::HandleScope handle_scope(_pIsolate);
@@ -109,7 +109,7 @@ namespace JsPie { namespace Scripting { namespace V8 {
 		
 		// TODO: Check for errors?
 
-		_oEnvironment->Console->Write(gcnew ScriptObservation(ScriptSeverity::Trace, "Script completed.", nullptr, nullptr));
+		ScriptConsoleExtensions::Trace(_oEnvironment->Console, "Script completed.");
 
 		IScriptOutput^ output = gcnew ScriptOutput(_oOutputEvents);
 		_oOutputEvents = gcnew List<ControlEvent^>();
@@ -118,11 +118,11 @@ namespace JsPie { namespace Scripting { namespace V8 {
 		for each (auto outputEvent in output->ControlEvents)
 		{
 			any = true;
-			_oEnvironment->Console->Write(gcnew ScriptObservation(ScriptSeverity::Trace, "Output event: " + outputEvent->ControlId->ToString() + " = " + outputEvent->Value, nullptr, nullptr));
+			ScriptConsoleExtensions::TraceFormat(_oEnvironment->Console, "Output event: {0} = {1}", outputEvent->ControlId, outputEvent->Value);
 		}
 
 		if (!any)
-			_oEnvironment->Console->Write(gcnew ScriptObservation(ScriptSeverity::Trace, "No output events produced.", nullptr, nullptr));
+			ScriptConsoleExtensions::Trace(_oEnvironment->Console, "No output events produced.");
 
 		return ScriptOutcome::Success()->WithValue(output);
 	}
