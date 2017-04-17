@@ -10,6 +10,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
+using JsPie.Plugins.VJoy;
 
 namespace JsPie.Cli
 {
@@ -17,6 +18,7 @@ namespace JsPie.Cli
     {
         static KeyboardPlugin _keyboardPlugin;
         static Ps3Plugin _ps3Plugin;
+        static VJoyPlugin _vJoyPlugin;
         static ConcurrentQueue<IScriptInput> _queue;
         static AutoResetEvent _event;
         static IJsPieServiceProvider _serviceProvider;
@@ -32,6 +34,7 @@ namespace JsPie.Cli
 
             using (_keyboardPlugin = new KeyboardPlugin())
             using (_ps3Plugin = new Ps3Plugin())
+            using (_vJoyPlugin = new VJoyPlugin())
             {
                 _keyboardPlugin.ControlEvent += OnControlEvent;
                 _keyboardPlugin.ControlEvents += OnControlEvents;
@@ -43,7 +46,9 @@ namespace JsPie.Cli
                 serviceProvider.Register<IScriptConsole>(() => new ScriptConsole(ScriptSeverity.Debug));
                 var settings = new ScriptEngineSettings(args.Length > 0 ? args[0] : "D:\\Development\\JsPie\\test.js");
                 serviceProvider.Register(() => settings);
-                var directory = new ControllerDirectory(new IInputPlugin[] { _keyboardPlugin, _ps3Plugin }.SelectMany(p => p.GetControllers()), _keyboardPlugin.GetControllers());
+                var directory = new ControllerDirectory(
+                    new IInputPlugin[] { _keyboardPlugin, _ps3Plugin }.SelectMany(p => p.GetControllers()), 
+                    new IOutputPlugin[] { _keyboardPlugin, _vJoyPlugin }.SelectMany(p => p.GetControllers()));
                 serviceProvider.Register(() => directory);
                 _serviceProvider = serviceProvider;
                 _scriptTask = Task.Factory.StartNew(Run);
@@ -75,7 +80,11 @@ namespace JsPie.Cli
                     IScriptInput input;
                     if (_queue.TryDequeue(out input))
                     {
-                        engine.Run(input);
+                        var output = engine.Run(input);
+                        if (output.WasSuccessful && output.HasValue)
+                        {
+                            _vJoyPlugin.ProcessEvents(output.Value.ControlEvents);
+                        }
                         continue;
                     }
 
