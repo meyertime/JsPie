@@ -140,11 +140,17 @@ namespace JsPie { namespace Scripting { namespace V8 {
 
 	ControllerInfo^ ControllerCallbacks::GetInputControllerInfo()
 	{
+		if (_hInputControllerInfo == 0)
+			return nullptr;
+
 		return (ControllerInfo^)((GCHandle)(IntPtr)_hInputControllerInfo).Target;
 	}
 
 	ControllerInfo^ ControllerCallbacks::GetOutputControllerInfo()
 	{
+		if (_hOutputControllerInfo == 0)
+			return nullptr;
+
 		return (ControllerInfo^)((GCHandle)(IntPtr)_hOutputControllerInfo).Target;
 	}
 

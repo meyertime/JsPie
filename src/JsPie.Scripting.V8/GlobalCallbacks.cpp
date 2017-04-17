@@ -61,7 +61,11 @@ namespace JsPie { namespace Scripting { namespace V8 {
 			if (pController == NULL)
 				break;
 
-			global->Set(ToV8String(pIsolate, pController->GetInputControllerInfo()->Name), pController->CreateTemplate(pIsolate));
+			auto oControllerInfo = pController->GetInputControllerInfo();
+			if (oControllerInfo == nullptr)
+				oControllerInfo = pController->GetOutputControllerInfo();
+
+			global->Set(ToV8String(pIsolate, oControllerInfo->Name), pController->CreateTemplate(pIsolate));
 		}
 
 		global->Set(v8::String::NewFromUtf8(pIsolate, "console"), _pConsoleCallbacks->CreateTemplate(pIsolate));
