@@ -5,6 +5,6 @@ namespace JsPie.Scripting
 {
     public interface IScriptOutput
     {
-        IEnumerable<ControlEvent> ControlEvents { get; }
+        IReadOnlyList<ControlEvent> ControlEvents { get; }
     }
 }

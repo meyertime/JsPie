@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
 using JsPie.Core;
-using System.Linq;
 
 namespace JsPie.Scripting
 {
     public class ScriptOutput : IScriptOutput
     {
-        public IEnumerable<ControlEvent> ControlEvents { get; }
+        private static readonly IReadOnlyList<ControlEvent> EmptyControlEvents = new ControlEvent[0];
 
-        public ScriptOutput(IEnumerable<ControlEvent> controlEvents)
+        public IReadOnlyList<ControlEvent> ControlEvents { get; }
+
+        public ScriptOutput(IReadOnlyList<ControlEvent> controlEvents)
         {
-            ControlEvents = controlEvents ?? Enumerable.Empty<ControlEvent>();
+            ControlEvents = controlEvents ?? EmptyControlEvents;
         }
     }
 }
