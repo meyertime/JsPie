@@ -100,7 +100,7 @@ namespace JsPie.Core.Util
 
         private static bool IsNull(T value)
         {
-            return typeof(T).IsValueType || !ReferenceEquals(null, value);
+            return !typeof(T).IsValueType && ReferenceEquals(null, value);
         }
     }
 }
