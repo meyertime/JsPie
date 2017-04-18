@@ -107,7 +107,7 @@ namespace JsPie.Plugins.VJoy
             // Get the driver attributes (Vendor ID, Product ID, Version Number)
             if (!_joystick.vJoyEnabled())
             {
-                Console.WriteLine("vJoy driver not enabled: Failed Getting vJoy attributes.");
+                Console.WriteLine("vJoy driver not enabled; failed getting vJoy attributes.");
                 return false;
             }
 
@@ -116,19 +116,19 @@ namespace JsPie.Plugins.VJoy
             switch (status)
             {
                 case VjdStat.VJD_STAT_OWN:
-                    Console.WriteLine("vJoy Device {0} is already owned by this feeder.", id);
+                    Console.WriteLine($"vJoy device {id} is already owned by this feeder.");
                     break;
                 case VjdStat.VJD_STAT_FREE:
-                    Console.WriteLine("vJoy Device {0} is free.", id);
+                    Console.WriteLine($"vJoy device {id} is free.");
                     break;
                 case VjdStat.VJD_STAT_BUSY:
-                    Console.WriteLine("vJoy Device {0} is already owned by another feeder.  Cannot continue.", id);
+                    Console.WriteLine($"vJoy device {id} is already owned by another feeder.  Failed acquiring device.");
                     return false;
                 case VjdStat.VJD_STAT_MISS:
-                    Console.WriteLine("vJoy Device {0} is not installed or disabled.  Cannot continue.", id);
+                    Console.WriteLine($"vJoy device {id} is not installed or disabled.  Failed acquiring device.");
                     return false;
                 default:
-                    Console.WriteLine("vJoy Device {0} general error.  Cannot continue.", id);
+                    Console.WriteLine($"vJoy device {id} general error.  Failed acquiring device.");
                     return false;
             };
 
@@ -138,18 +138,19 @@ namespace JsPie.Plugins.VJoy
             bool match = _joystick.DriverMatch(ref dllVer, ref drvVer);
             if (!match)
             {
-                Console.WriteLine("Version of vJoy driver ({0:X}) does not match DLL version ({1:X})", drvVer, dllVer);
+                Console.WriteLine($"Version of vJoy driver ({drvVer:X}) does not match DLL version ({dllVer:X})");
                 return false;
             }
 
             // Acquire the target
             if ((status == VjdStat.VJD_STAT_OWN) || ((status == VjdStat.VJD_STAT_FREE) && (!_joystick.AcquireVJD(id))))
             {
-                Console.WriteLine("Failed to acquire vJoy device number {0}.", id);
+                Console.WriteLine($"Failed to acquire vJoy device number {id}.");
                 return false;
             }
 
             _isAcquired = true;
+            Console.WriteLine($"Successfully acquired vJoy device number {id}.");
 
             return true;
         }
