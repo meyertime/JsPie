@@ -32,6 +32,8 @@ namespace JsPie.Cli
             _queue = new ConcurrentQueue<IScriptInput>();
             _event = new AutoResetEvent(false);
 
+            _queue.Enqueue(new ScriptInput(new ControlEvent[0]));
+
             using (_keyboardPlugin = new KeyboardPlugin())
             using (_ps3Plugin = new Ps3Plugin())
             using (_vJoyPlugin = new VJoyPlugin())
