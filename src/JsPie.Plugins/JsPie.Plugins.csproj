@@ -107,7 +107,6 @@
   <ItemGroup>
     <None Include="..\..\external\vJoy\$(PlatformTarget)\vJoyInterface.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Link>VJoy\vJoyInterface.dll</Link>
     </None>
   </ItemGroup>
 </Project>
