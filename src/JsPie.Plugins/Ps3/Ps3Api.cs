@@ -26,11 +26,6 @@ namespace JsPie.Plugins.Ps3
         public const uint OPEN_EXISTING = 3;
         public const uint FILE_FLAG_OVERLAPPED = 0x40000000;
 
-        public const byte USB_DIR_IN = 0x80;
-        public const byte USB_TYPE_CLASS = 0x01 << 5;
-        public const byte USB_RECIP_INTERFACE = 0x01;
-        public const byte HID_REQ_GET_REPORT = 0x01;
-
         public enum NTSTATUS : uint
         { 
             HIDP_STATUS_SUCCESS                  = ((uint)0x0 << 28) | (FACILITY_HID_ERROR_CODE << 16) | 0,
@@ -95,16 +90,6 @@ namespace JsPie.Plugins.Ps3
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 8)]
-        public class WINUSB_SETUP_PACKET
-        {
-            public byte RequestType;
-            public byte Request;
-            public ushort Value;
-            public ushort Index;
-            public ushort Length;
-        }
-
-        [StructLayout(LayoutKind.Sequential, Pack = 8)]
         public class HIDP_CAPS
         {
             public ushort Usage;
@@ -148,20 +133,11 @@ namespace JsPie.Plugins.Ps3
             [In, Optional] IntPtr hwndParent, 
             [In] uint Flags
         );
-        /*HDEVINFO SetupDiGetClassDevs(
-          _In_opt_ const GUID* ClassGuid,
-          _In_opt_       PCTSTR Enumerator,
-          _In_opt_       HWND hwndParent,
-          _In_           DWORD Flags
-        );*/
 
         [DllImport("setupapi.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern bool SetupDiDestroyDeviceInfoList(
             [In] IntPtr DeviceInfoSet
         );
-        /*BOOL SetupDiDestroysDeviceInfoList(
-          _In_ HDEVINFO DeviceInfoSet
-        );*/
 
         [DllImport("setupapi.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern bool SetupDiEnumDeviceInterfaces(
@@ -171,13 +147,6 @@ namespace JsPie.Plugins.Ps3
             [In] uint MemberIndex, 
             [In, Out] SP_DEVICE_INTERFACE_DATA DeviceInterfaceData
         );
-        /*BOOL SetupDiEnumDeviceInterfaces(
-          _In_           HDEVINFO                  DeviceInfoSet,
-          _In_opt_       PSP_DEVINFO_DATA          DeviceInfoData,
-          _In_     const GUID                      *InterfaceClassGuid,
-          _In_           DWORD                     MemberIndex,
-          _Out_          PSP_DEVICE_INTERFACE_DATA DeviceInterfaceData
-        );*/
 
         [DllImport("setupapi.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern bool SetupDiGetDeviceInterfaceDetail(
@@ -188,14 +157,6 @@ namespace JsPie.Plugins.Ps3
             [Out, Optional] out uint RequiredSize,
             [In, Out, Optional] SP_DEVINFO_DATA DeviceInfoData
         );
-        /*BOOL SetupDiGetDeviceInterfaceDetail(
-          _In_      HDEVINFO                         DeviceInfoSet,
-          _In_      PSP_DEVICE_INTERFACE_DATA        DeviceInterfaceData,
-          _Out_opt_ PSP_DEVICE_INTERFACE_DETAIL_DATA DeviceInterfaceDetailData,
-          _In_      DWORD                            DeviceInterfaceDetailDataSize,
-          _Out_opt_ PDWORD                           RequiredSize,
-          _Out_opt_ PSP_DEVINFO_DATA                 DeviceInfoData
-        );*/
 
         
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
@@ -208,60 +169,11 @@ namespace JsPie.Plugins.Ps3
           [In] uint dwFlagsAndAttributes,
           [In, Optional] IntPtr hTemplateFile
         );
-        /*HANDLE WINAPI CreateFile(
-          _In_     LPCTSTR               lpFileName,
-          _In_     DWORD                 dwDesiredAccess,
-          _In_     DWORD                 dwShareMode,
-          _In_opt_ LPSECURITY_ATTRIBUTES lpSecurityAttributes,
-          _In_     DWORD                 dwCreationDisposition,
-          _In_     DWORD                 dwFlagsAndAttributes,
-          _In_opt_ HANDLE                hTemplateFile
-        );*/
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern bool CloseHandle(
             [In] IntPtr hObject
         );
-        /*BOOL WINAPI CloseHandle(
-          _In_ HANDLE hObject
-        );*/
-
-
-        [DllImport("winusb.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern bool WinUsb_Initialize(
-            [In] IntPtr DeviceHandle,
-            [Out] out IntPtr InterfaceHandle
-        );
-        /*BOOL __stdcall WinUsb_Initialize(
-          _In_ HANDLE                   DeviceHandle,
-          _Out_ PWINUSB_INTERFACE_HANDLE InterfaceHandle
-        );*/
-
-        [DllImport("winusb.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern bool WinUsb_Free(
-          [In] IntPtr InterfaceHandle
-        );
-        /*BOOL __stdcall WinUsb_Free(
-          _In_ WINUSB_INTERFACE_HANDLE InterfaceHandle
-        );*/
-
-        [DllImport("winusb.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern bool WinUsb_ControlTransfer(
-          [In] IntPtr InterfaceHandle,
-          [In] WINUSB_SETUP_PACKET SetupPacket,
-          [Out] IntPtr Buffer,
-          [In] ulong BufferLength,
-          [Out, Optional] out ulong LengthTransferred,
-          [In, Optional] IntPtr Overlapped
-        );
-        /*BOOL __stdcall WinUsb_ControlTransfer(
-          _In_ WINUSB_INTERFACE_HANDLE InterfaceHandle,
-          _In_ WINUSB_SETUP_PACKET     SetupPacket,
-          _Out_ PUCHAR                  Buffer,
-          _In_ ULONG                   BufferLength,
-          _Out_opt_ PULONG                  LengthTransferred,
-          _In_opt_ LPOVERLAPPED            Overlapped
-        );*/
 
 
         [DllImport("hid.dll", CharSet = CharSet.Auto, SetLastError = true)]
@@ -269,37 +181,22 @@ namespace JsPie.Plugins.Ps3
             [In] IntPtr HidDeviceObject,
             [Out] out IntPtr PreparsedData
         );
-        /*BOOLEAN __stdcall HidD_GetPreparsedData(
-          _In_ HANDLE               HidDeviceObject,
-          _Out_ PHIDP_PREPARSED_DATA *PreparsedData
-        );*/
 
         [DllImport("hid.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern bool HidD_FreePreparsedData(
             [In] IntPtr PreparsedData
         );
-        /*BOOLEAN __stdcall HidD_FreePreparsedData(
-          _In_ PHIDP_PREPARSED_DATA PreparsedData
-        );*/
 
         [DllImport("hid.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern NTSTATUS HidP_GetCaps(
             [In] IntPtr PreparsedData,
             [In, Out] HIDP_CAPS Capabilities
         );
-        /*NTSTATUS __stdcall HidP_GetCaps(
-          _In_  PHIDP_PREPARSED_DATA PreparsedData,
-          _Out_ PHIDP_CAPS           Capabilities
-        );*/
 
         [DllImport("hid.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern void HidD_GetHidGuid(
             [Out] out Guid HidGuid
         );
-        /*void __stdcall HidD_GetHidGuid(
-          _Out_ LPGUID HidGuid
-        );*/
-
 
 
         public static void CheckError(bool condition)
