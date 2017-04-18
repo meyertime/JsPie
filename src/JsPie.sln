@@ -18,6 +18,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{40D2523B-A855-4C1E-A8A8-9C7EC15E4C9D}"
 	ProjectSection(SolutionItems) = preProject
 		..\.gitignore = ..\.gitignore
+		CommonAssemblyInfo.cpp = CommonAssemblyInfo.cpp
+		CommonAssemblyInfo.cs = CommonAssemblyInfo.cs
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
