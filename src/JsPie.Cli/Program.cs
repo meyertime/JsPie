@@ -43,7 +43,7 @@ namespace JsPie.Cli
                 _ps3Plugin.ControlEvents += OnControlEvents;
 
                 var serviceProvider = new DefaultJsPieServiceProvider();
-                serviceProvider.Register<IScriptConsole>(() => new ScriptConsole(ScriptSeverity.Debug));
+                serviceProvider.Register<IScriptConsole>(() => new ScriptConsole(ScriptSeverity.Info));
                 var settings = new ScriptEngineSettings(args.Length > 0 ? args[0] : "D:\\Development\\JsPie\\test.js");
                 serviceProvider.Register(() => settings);
                 var directory = new ControllerDirectory(
@@ -83,6 +83,7 @@ namespace JsPie.Cli
                         var output = engine.Run(input);
                         if (output.WasSuccessful && output.HasValue)
                         {
+                            _keyboardPlugin.ProcessEvents(output.Value.ControlEvents);
                             _vJoyPlugin.ProcessEvents(output.Value.ControlEvents);
                         }
                         continue;

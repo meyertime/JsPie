@@ -6,13 +6,16 @@ namespace JsPie.Plugins.Keyboard
 {
     public class KeyboardHook : IDisposable
     {
-        private readonly IntPtr _hHook;
+        private readonly uint _mark;
+
         private readonly LowLevelKeyboardProc _lowLevelKeyboardProc;
+        private readonly IntPtr _hHook;        
 
-        public KeyboardHook()
+        public KeyboardHook(uint mark)
         {
-            _lowLevelKeyboardProc = LowLevelKeyboardProc;
+            _mark = mark;
 
+            _lowLevelKeyboardProc = LowLevelKeyboardProc;
             _hHook = SetWindowsHookEx(WH_KEYBOARD_LL, _lowLevelKeyboardProc, IntPtr.Zero, 0);
         }
 
@@ -27,24 +30,28 @@ namespace JsPie.Plugins.Keyboard
         {
             if (nCode >= 0)
             {
-                switch ((int)wParam)
+                var hookInfo = Marshal.PtrToStructure<KBDLLHOOKSTRUCT>(lParam);
+                if (hookInfo.dwExtraInfo != _mark)
                 {
-                    case WM_KEYDOWN:
-                    case WM_SYSKEYDOWN:
-                        RaiseEvent(Marshal.ReadInt32(lParam), true);
-                        break;
+                    switch ((int)wParam)
+                    {
+                        case WM_KEYDOWN:
+                        case WM_SYSKEYDOWN:
+                            RaiseEvent(hookInfo.vkCode, true);
+                            break;
 
-                    case WM_KEYUP:
-                    case WM_SYSKEYUP:
-                        RaiseEvent(Marshal.ReadInt32(lParam), false);
-                        break;
+                        case WM_KEYUP:
+                        case WM_SYSKEYUP:
+                            RaiseEvent(hookInfo.vkCode, false);
+                            break;
+                    }
                 }
             }
 
             return CallNextHookEx(_hHook, nCode, wParam, lParam);
         }
 
-        private void RaiseEvent(int keyCode, bool value)
+        private void RaiseEvent(uint keyCode, bool value)
         {
             var handler = KeyboardHookEvent;
             if (handler != null)

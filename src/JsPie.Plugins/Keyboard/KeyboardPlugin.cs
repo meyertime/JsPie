@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using JsPie.Core;
 using System.Linq;
+using static JsPie.Plugins.Keyboard.KeyboardApi;
 
 namespace JsPie.Plugins.Keyboard
 {
@@ -147,19 +148,25 @@ namespace JsPie.Plugins.Keyboard
 
 
         private readonly KeyboardControl[] _controlsByKeyCode;
+        private readonly Dictionary<string, KeyboardControl> _controlsByName;
+        private readonly uint _mark;
         private readonly KeyboardHook _hook;
         private readonly bool[] _keyState;
 
         public KeyboardPlugin()
         {
             _controlsByKeyCode = new KeyboardControl[Controls.Max(c => c.KeyCode) + 1];
-            foreach (var control in Controls)
+            _controlsByName = new Dictionary<string, KeyboardControl>();
+            foreach (var controlInfo in Controls)
             {
-                _controlsByKeyCode[control.KeyCode] = new KeyboardControl(control);
+                var control = new KeyboardControl(controlInfo);
+                _controlsByKeyCode[controlInfo.KeyCode] = control;
+                _controlsByName[controlInfo.ControlId.Name] = control;
             }
 
-            _hook = new KeyboardHook();
-            _keyState = new bool[Controls.Max(c => c.KeyCode) + 1];
+            _mark = (uint)new Random().Next(0, int.MaxValue);
+            _hook = new KeyboardHook(_mark);
+            _keyState = new bool[Controls.Max(c => c.KeyCode) + 1];           
 
             _hook.KeyboardHookEvent += OnKeyboardHookEvent;
         }
@@ -179,10 +186,23 @@ namespace JsPie.Plugins.Keyboard
 
         public void ProcessEvents(IEnumerable<ControlEvent> events)
         {
-            throw new NotImplementedException();
+            foreach (var @event in events)
+            {
+                if (@event.ControlId.ControllerId.Name != ControllerId.Name)
+                    continue;
+
+                KeyboardControl control;
+                if (!_controlsByName.TryGetValue(@event.ControlId.Name, out control))
+                    continue;
+
+                var keyCode = control.KeyboardControlInfo.KeyCode;
+                var keyState = @event.Value != 0;
+                control.KeyState = keyState;
+                keybd_event((byte)keyCode, 0, keyState ? 0 : KEYEVENTF_KEYUP, _mark);
+            }
         }
 
-        private void OnKeyboardHookEvent(int keyCode, bool value)
+        private void OnKeyboardHookEvent(uint keyCode, bool value)
         {
             if (keyCode >= _controlsByKeyCode.Length)
                 return;

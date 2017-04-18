@@ -1,4 +1,4 @@
 ﻿namespace JsPie.Plugins.Keyboard
 {
-    public delegate void KeyboardHookEventHandler(int keyCode, bool value);
+    public delegate void KeyboardHookEventHandler(uint keyCode, bool value);
 }
