@@ -11,6 +11,7 @@ using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 using JsPie.Plugins.VJoy;
+using JsPie.Plugins.XInput;
 
 namespace JsPie.Cli
 {
@@ -19,6 +20,7 @@ namespace JsPie.Cli
         static KeyboardPlugin _keyboardPlugin;
         static Ps3Plugin _ps3Plugin;
         static VJoyPlugin _vJoyPlugin;
+        static XInputPlugin _xInputPlugin;
         static ConcurrentQueue<IScriptInput> _queue;
         static AutoResetEvent _event;
         static IJsPieServiceProvider _serviceProvider;
@@ -37,6 +39,7 @@ namespace JsPie.Cli
             using (_keyboardPlugin = new KeyboardPlugin())
             using (_ps3Plugin = new Ps3Plugin())
             using (_vJoyPlugin = new VJoyPlugin())
+            using (_xInputPlugin = new XInputPlugin())
             {
                 _keyboardPlugin.ControlEvent += OnControlEvent;
                 _keyboardPlugin.ControlEvents += OnControlEvents;
@@ -44,12 +47,15 @@ namespace JsPie.Cli
                 _ps3Plugin.ControlEvent += OnControlEvent;
                 _ps3Plugin.ControlEvents += OnControlEvents;
 
+                _xInputPlugin.ControlEvent += OnControlEvent;
+                _xInputPlugin.ControlEvents += OnControlEvents;
+
                 var serviceProvider = new DefaultJsPieServiceProvider();
                 serviceProvider.Register<IScriptConsole>(() => new ScriptConsole(ScriptSeverity.Info));
                 var settings = new ScriptEngineSettings(args.Length > 0 ? args[0] : "D:\\Development\\JsPie\\test.js");
                 serviceProvider.Register(() => settings);
                 var directory = new ControllerDirectory(
-                    new IInputPlugin[] { _keyboardPlugin, _ps3Plugin }.SelectMany(p => p.GetControllers()), 
+                    new IInputPlugin[] { _keyboardPlugin, _ps3Plugin, _xInputPlugin }.SelectMany(p => p.GetControllers()),
                     new IOutputPlugin[] { _keyboardPlugin, _vJoyPlugin }.SelectMany(p => p.GetControllers()));
                 serviceProvider.Register(() => directory);
                 _serviceProvider = serviceProvider;
