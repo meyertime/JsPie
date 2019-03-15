@@ -25,7 +25,7 @@ namespace JsPie.Plugins.VJoy
         public VJoyPlugin()
         {
             _controlSet = new VJoyControlSet(ControllerId);
-            _controllerInfo = new ControllerInfo(ControllerId.Name, 1, "vJoy joystick.", _controlSet.Controls.Select(c => c.ControlInfo));
+            _controllerInfo = new ControllerInfo(ControllerId.Name, 1, "vJoy joystick", _controlSet.Controls.Select(c => c.ControlInfo));
 
             _joystick = new vJoy();
             

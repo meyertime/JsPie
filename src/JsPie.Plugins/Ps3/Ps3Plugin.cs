@@ -21,7 +21,7 @@ namespace JsPie.Plugins.Ps3
         public Ps3Plugin()
         {
             _controlSet = new Ps3ControlSet(ControllerId);
-            _controllerInfo = new ControllerInfo(ControllerId.Name, 1, "PlayStation3 controller.", _controlSet.Controls.Select(c => c.Ps3ControlInfo.ControlInfo));
+            _controllerInfo = new ControllerInfo(ControllerId.Name, 1, "PlayStation3 controller", _controlSet.Controls.Select(c => c.Ps3ControlInfo.ControlInfo));
             
             // TODO: Multiple controllers and detect when controllers are connected / disconnected
             var enumerator = new Ps3UsbDeviceEnumerator();

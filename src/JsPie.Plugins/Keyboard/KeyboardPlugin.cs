@@ -138,7 +138,7 @@ namespace JsPie.Plugins.Keyboard
                 }
             }
 
-            ControllerInfo = new ControllerInfo(ControllerId.Name, 1, "The keyboard.", Controls.Select(c => c.ControlInfo));
+            ControllerInfo = new ControllerInfo(ControllerId.Name, 1, "The keyboard", Controls.Select(c => c.ControlInfo));
         }
 
         private static KeyboardControlInfo Key(string name, int keyCode, string description = null)
